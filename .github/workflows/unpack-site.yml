@@ -1,0 +1,42 @@
+name: Unpack uploaded site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site.zip"
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unpack site.zip
+        run: |
+          set -e
+          rm -rf _site_unpack
+          mkdir _site_unpack
+          unzip -o site.zip -d _site_unpack
+          test -f _site_unpack/index.html
+          test -f _site_unpack/social.html
+          rm -rf assets
+          rm -f index.html social.html vercel.json
+          cp -a _site_unpack/. .
+          rm -rf _site_unpack
+
+      - name: Commit extracted site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html social.html vercel.json assets
+          if git diff --cached --quiet; then
+            echo "No extracted changes."
+            exit 0
+          fi
+          git commit -m "Deploy integrated history and social site"
+          git push
