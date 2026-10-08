@@ -1,0 +1,115 @@
+name: Integrate three subject tabs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/integrate-subjects.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch subject navigation and validate English
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, re, shutil, urllib.request
+
+          root=Path(".")
+          history=root/"index.html"
+          social=root/"social.html"
+          english=root/"english"/"index.html"
+
+          assert history.exists() and history.stat().st_size > 1_000_000, "history index missing/corrupt"
+          assert social.exists() and social.stat().st_size > 1_000_000, "social page missing/corrupt"
+
+          if (not english.exists()) or english.stat().st_size < 100_000:
+              english.parent.mkdir(parents=True,exist_ok=True)
+              urllib.request.urlretrieve(
+                  "https://raw.githubusercontent.com/whynat0517/hanguksa/main/english/index.html",
+                  english
+              )
+
+          NAVS={
+            "history": '<nav class="subjectPortal" aria-label="과목 전환"><a class="active" aria-current="page" href="/" target="_self">📜 한국사</a><a href="/social/" target="_self">🌐 통합사회</a><a href="/english/" target="_self">🔤 공통영어</a></nav>',
+            "social": '<nav class="subjectPortal" aria-label="과목 전환"><a href="/" target="_self">📜 한국사</a><a class="active" aria-current="page" href="/social/" target="_self">🌐 통합사회</a><a href="/english/" target="_self">🔤 공통영어</a></nav>',
+            "english": '<nav class="subjectPortal" aria-label="과목 전환"><a href="/" target="_self">📜 한국사</a><a href="/social/" target="_self">🌐 통합사회</a><a class="active" aria-current="page" href="/english/" target="_self">🔤 공통영어</a></nav>'
+          }
+
+          def patch_nav(path, active):
+              t=path.read_text(encoding="utf-8")
+              nav=NAVS[active]
+              if re.search(r'<nav class="subjectPortal"[\s\S]*?</nav>',t):
+                  t=re.sub(r'<nav class="subjectPortal"[\s\S]*?</nav>',nav,t,count=1)
+              elif active=="history":
+                  t=re.sub(r'(<header[^>]*>)',r'\1'+nav,t,count=1)
+              else:
+                  t=t.replace('<header class="top"><div class="shell head">','<header class="top"><div class="shell head">'+nav,1)
+              path.write_text(t,encoding="utf-8")
+
+          patch_nav(history,"history")
+          patch_nav(social,"social")
+          patch_nav(english,"english")
+
+          (root/"social").mkdir(exist_ok=True)
+          shutil.copy2(social,root/"social"/"index.html")
+          shutil.copy2(english,root/"english.html")
+
+          # English source-integrity audit.
+          et=english.read_text(encoding="utf-8")
+          m=re.search(r'<script id="dataset" type="application/json">([\s\S]*?)</script>',et)
+          assert m, "English dataset missing"
+          d=json.loads(m.group(1))
+          assert len(d["entries"])==37 and len(d["questions"])==1850
+          eids={e["id"] for e in d["entries"]}
+          assert len(eids)==37
+          counts={}
+          for q in d["questions"]:
+              assert q["pid"] in eids
+              counts[q["pid"]]=counts.get(q["pid"],0)+1
+              if q.get("opts") is not None:
+                  assert isinstance(q.get("ans"),int) and 0 <= q["ans"] < len(q["opts"])
+              else:
+                  assert str(q.get("sample","")).strip()
+          for e in d["entries"]:
+              assert counts.get(e["id"])==50
+              assert str(e.get("text","")).strip()
+              assert str(e.get("summary",{}).get("translation","")).strip()
+              assert "�" not in e.get("text","")
+
+          vercel={
+            "cleanUrls":False,
+            "trailingSlash":False,
+            "rewrites":[
+              {"source":"/history","destination":"/index.html"},
+              {"source":"/social","destination":"/social/index.html"},
+              {"source":"/english","destination":"/english/index.html"}
+            ],
+            "headers":[{"source":"/(.*)","headers":[
+              {"key":"X-Content-Type-Options","value":"nosniff"},
+              {"key":"Cache-Control","value":"public, max-age=0, must-revalidate"},
+              {"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"}
+            ]}]
+          }
+          (root/"vercel.json").write_text(json.dumps(vercel,ensure_ascii=False,indent=2),encoding="utf-8")
+          PY
+
+      - name: Commit integrated site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html social.html social english.html english vercel.json
+          if git diff --cached --quiet; then
+            echo "No integration changes"
+            exit 0
+          fi
+          git commit -m "Integrate Common English with Korean history and social studies"
+          git push
