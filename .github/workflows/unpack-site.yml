@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/unpack-site.yml"
       - "site.zip"
       - "index_crossbrowser_vercel.zip"
       - "exam_trainer_github_slim.zip"
