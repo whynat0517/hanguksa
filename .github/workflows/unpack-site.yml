@@ -39,24 +39,15 @@ jobs:
           rm -rf /tmp/site_unpack
           mkdir -p /tmp/site_unpack
           unzip -o /tmp/site.zip -d /tmp/site_unpack
-
           test -f /tmp/site_unpack/index.html
           test -f /tmp/site_unpack/social.html
           test -f /tmp/site_unpack/social/index.html
           test -f /tmp/site_unpack/english.html
           test -f /tmp/site_unpack/english/index.html
           test -f /tmp/site_unpack/vercel.json
-
           rm -rf assets social english
-          rm -f index.html social.html vercel.json
+          rm -f index.html social.html english.html vercel.json
           cp -a /tmp/site_unpack/. .
-
-          test -f index.html
-          test -f social.html
-          test -f social/index.html
-          test -f english.html
-          test -f english/index.html
-          test -f vercel.json
 
       - name: Commit generated files
         run: |
@@ -67,5 +58,5 @@ jobs:
             echo "No generated changes"
             exit 0
           fi
-          git commit -m "Build integrated history social English site"
+          git commit -m "Deploy integrated Korean history, social studies, and common English site"
           git push

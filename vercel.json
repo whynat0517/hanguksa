@@ -9,6 +9,10 @@
     {
       "source": "/social",
       "destination": "/social/index.html"
+    },
+    {
+      "source": "/english",
+      "destination": "/english/index.html"
     }
   ],
   "headers": [
@@ -22,6 +26,10 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
