@@ -6,6 +6,8 @@ on:
     paths:
       - ".github/workflows/unpack-site.yml"
       - "site.zip"
+      - "index_crossbrowser_vercel.zip"
+      - "exam_trainer_github_slim.zip"
   workflow_dispatch:
 
 permissions:
@@ -18,15 +20,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get integrated package
+      - name: Select package
         run: |
           set -e
           if [ -f site.zip ]; then
             cp site.zip /tmp/site.zip
+          elif [ -f index_crossbrowser_vercel.zip ]; then
+            cp index_crossbrowser_vercel.zip /tmp/site.zip
+          elif [ -f exam_trainer_github_slim.zip ]; then
+            cp exam_trainer_github_slim.zip /tmp/site.zip
           else
-            curl -L --fail --retry 3 \
-              "https://raw.githubusercontent.com/whynat0517/Social-/main/index_crossbrowser_vercel.zip" \
-              -o /tmp/site.zip
+            echo "No site package found"
+            exit 1
           fi
 
       - name: Extract static site
@@ -35,22 +40,29 @@ jobs:
           rm -rf /tmp/site_unpack
           mkdir -p /tmp/site_unpack
           unzip -o /tmp/site.zip -d /tmp/site_unpack
+
           test -f /tmp/site_unpack/index.html
           test -f /tmp/site_unpack/social.html
-          rm -rf assets
+          test -f /tmp/site_unpack/social/index.html
+          test -f /tmp/site_unpack/vercel.json
+
+          rm -rf assets social
           rm -f index.html social.html vercel.json
           cp -a /tmp/site_unpack/. .
+
           test -f index.html
           test -f social.html
+          test -f social/index.html
+          test -f vercel.json
 
       - name: Commit generated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html social.html vercel.json assets
+          git add -A -- index.html social.html social vercel.json assets
           if git diff --cached --quiet; then
             echo "No generated changes"
             exit 0
           fi
-          git commit -m "Build integrated history and social site"
+          git commit -m "Fix social route and integrated site"
           git push
