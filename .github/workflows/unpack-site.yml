@@ -44,15 +44,19 @@ jobs:
           test -f /tmp/site_unpack/index.html
           test -f /tmp/site_unpack/social.html
           test -f /tmp/site_unpack/social/index.html
+          test -f /tmp/site_unpack/english.html
+          test -f /tmp/site_unpack/english/index.html
           test -f /tmp/site_unpack/vercel.json
 
-          rm -rf assets social
+          rm -rf assets social english
           rm -f index.html social.html vercel.json
           cp -a /tmp/site_unpack/. .
 
           test -f index.html
           test -f social.html
           test -f social/index.html
+          test -f english.html
+          test -f english/index.html
           test -f vercel.json
 
       - name: Commit generated files
@@ -64,5 +68,5 @@ jobs:
             echo "No generated changes"
             exit 0
           fi
-          git commit -m "Fix social route and integrated site"
+          git commit -m "Build integrated history social English site"
           git push
