@@ -25,14 +25,14 @@ def nav(active):
 
 def remove_old(text):
     patterns=[
-        r'<nav\\b[^>]*class="[^"]*subjectPortal[^"]*"[^>]*>.*?</nav>',
-        r'<div\\b[^>]*class="[^"]*xSubjectSwitch[^"]*"[^>]*>.*?</div>',
-        r'<div\\b[^>]*class="[^"]*kx-switch[^"]*"[^>]*>.*?</div>',
-        r'<div\\b[^>]*class="[^"]*unifiedSubjectsShell[^"]*"[^>]*>.*?</div>',
+        r'<nav\b[^>]*class="[^"]*subjectPortal[^"]*"[^>]*>.*?</nav>',
+        r'<div\b[^>]*class="[^"]*xSubjectSwitch[^"]*"[^>]*>.*?</div>',
+        r'<div\b[^>]*class="[^"]*kx-switch[^"]*"[^>]*>.*?</div>',
+        r'<div\b[^>]*class="[^"]*unifiedSubjectsShell[^"]*"[^>]*>.*?</div>',
     ]
     for p in patterns:
         text=re.sub(p,'',text,flags=re.S|re.I)
-    text=re.sub(r'<script\\b[^>]*id="(?:subject-nav-fallback|unified-subject-fallback)"[^>]*>.*?</script>','',text,flags=re.S|re.I)
+    text=re.sub(r'<script\b[^>]*id="(?:subject-nav-fallback|unified-subject-fallback)"[^>]*>.*?</script>','',text,flags=re.S|re.I)
     return text
 
 def patch(path, active):
@@ -52,7 +52,7 @@ def patch(path, active):
         raise RuntimeError(f'No style tag: {path}')
     text=text.replace('</style>',NAV_CSS+reset+'</style>',1)
 
-    m=re.search(r'<body\\b[^>]*>',text,re.I)
+    m=re.search(r'<body\b[^>]*>',text,re.I)
     if not m:
         raise RuntimeError(f'No body: {path}')
     text=text[:m.end()]+nav(active)+text[m.end():]
