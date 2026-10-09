@@ -4,7 +4,11 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/history-runtime.html"
+      "destination": "/study.html"
+    },
+    {
+      "source": "/study",
+      "destination": "/study.html"
     },
     {
       "source": "/history",
@@ -12,7 +16,7 @@
     },
     {
       "source": "/social",
-      "destination": "/social-runtime.html"
+      "destination": "/social/index.html"
     },
     {
       "source": "/english",
