@@ -94,53 +94,53 @@ body{background:linear-gradient(180deg,#f6f8fc 0,#eef2f8 100%);min-height:100vh}
 .unifiedSubjects a.active.history{background:linear-gradient(180deg,#ffd4e6,#f3a1c5);color:#291923;border-color:#f2a7c7}.unifiedSubjects a.active.social{background:linear-gradient(135deg,#3159d8,#7185f2);color:#fff;border-color:#3159d8}.unifiedSubjects a.active.english{background:linear-gradient(135deg,#ffdd70,#ffb13b);color:#4c2d0c;border-color:#efa63a}
 @media(max-width:680px){.unifiedSubjectsShell{padding:8px 10px}.unifiedSubjects{gap:6px;padding:5px;border-radius:16px}.unifiedSubjects a{min-height:44px;padding:9px 7px;font-size:12px;border-radius:11px}.unifiedSubjects .emoji{font-size:15px}}
 header .head{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important}header .head>.nav{display:flex!important;justify-content:flex-start!important;flex:1 1 auto!important}@media(max-width:900px){header .head{display:flex!important}.nav{width:100%!important;overflow-x:auto!important}}</style>
-<style id="study-suite-ui">/* ===== Study Suite global subject navigation v39 ===== */
-.studySuiteBar{position:relative;z-index:1200;padding:12px max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));border-bottom:1px solid transparent}
-.studySuiteInner{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:7px;border-radius:20px}
-.studySuiteTab{min-width:0;min-height:48px;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 12px;border:1px solid transparent;border-radius:14px;text-decoration:none!important;font-size:15px;font-weight:950;line-height:1.2;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .14s ease,box-shadow .14s ease,background .14s ease}
+<style id="study-suite-ui">/* ===== Study Suite global subject navigation v40 ===== */
+.studySuiteBar{position:relative;z-index:1200;width:100%;padding:10px max(12px,env(safe-area-inset-right)) 10px max(12px,env(safe-area-inset-left));background:#fffaf4;border-bottom:1px solid #eadfce;box-shadow:0 4px 18px rgba(58,42,24,.045);font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+.studySuiteBar *{box-sizing:border-box}
+.studySuiteInner{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border:1px solid #ead9bf;border-radius:18px;background:rgba(255,255,255,.74)}
+.studySuiteTab{min-width:0;min-height:48px;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 12px;border:1px solid #e5d8c8;border-radius:13px;text-decoration:none!important;font-size:14px;font-weight:950;line-height:1.2;letter-spacing:-.025em;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation;color:#403831;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.02);transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
 .studySuiteTab:active{transform:scale(.985)}
 .studySuiteTab .suiteEmoji{font-size:17px;line-height:1}
-.portal-history .studySuiteBar{background:#0d0910;border-bottom-color:#2c2430}
-.portal-history .studySuiteInner{background:#171119;border:1px solid #3a2d3b;box-shadow:0 8px 28px #0005}
-.portal-history .studySuiteTab{color:#d8ccd5;background:#211a22;border-color:#3b303c}
-.portal-history .studySuiteTab.active{color:#291822;background:linear-gradient(180deg,#ffd5e6,#f2a2c6);border-color:#f4b0cd;box-shadow:0 6px 20px #f39bc342}
-.portal-social .studySuiteBar{background:#f4f6fc;border-bottom-color:#dce2ef}
-.portal-social .studySuiteInner{background:#eef2fa;border:1px solid #d7deec;box-shadow:0 8px 24px #334b8b14}
-.portal-social .studySuiteTab{color:#344054;background:#fff;border-color:#d9e0ed}
-.portal-social .studySuiteTab.active{color:#fff;background:linear-gradient(135deg,#3159d8,#7287ef);border-color:#3159d8;box-shadow:0 7px 20px #3159d832}
-.portal-english .studySuiteBar{background:#fffaf0;border-bottom-color:#f0dfc2}
-.portal-english .studySuiteInner{background:#fff7e7;border:1px solid #ead4a9;box-shadow:0 8px 24px #a26c2717}
-.portal-english .studySuiteTab{color:#6f4b23;background:#fffdf8;border-color:#ead8b7}
-.portal-english .studySuiteTab.active{color:#4b2c0e;background:linear-gradient(135deg,#ffdd6e,#ffad39);border-color:#efa43a;box-shadow:0 7px 20px #ef9f3738}
-.portal-social header .head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
-.portal-social header .head>.nav{margin-left:auto!important;justify-content:flex-end!important;min-width:0}
-.portal-english .top .head{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
-.portal-english .mainnav{margin-left:auto!important;min-width:0}
+.studySuiteTab.active.history{color:#351827;background:linear-gradient(180deg,#ffd6e8,#f29dc6);border-color:#eb9ac2;box-shadow:0 5px 14px rgba(220,112,164,.20)}
+.studySuiteTab.active.social{color:#fff;background:linear-gradient(135deg,#3159dc,#7187f3);border-color:#3159dc;box-shadow:0 5px 14px rgba(49,89,220,.20)}
+.studySuiteTab.active.english{color:#4b2c0e;background:linear-gradient(135deg,#ffdd72,#ffad39);border-color:#efa438;box-shadow:0 5px 14px rgba(239,164,56,.20)}
+
+/* restore each app's own header layout; the subject bar now lives outside app headers */
 .portal-history header{top:0!important;box-shadow:0 8px 30px #0002}
 .portal-social header{top:0!important;box-shadow:0 7px 24px #3159d80e}
 .portal-english .top{top:0!important;box-shadow:0 7px 24px #9d692312}
+.portal-social header .head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
+.portal-social header .head>.nav{margin-left:auto!important;justify-content:flex-end!important;min-width:0}
+.portal-english .top .head{display:flex!important;align-items:center!important;gap:19px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
+.portal-english .mainnav{margin-left:auto!important;min-width:0}
+
 @media(max-width:900px){
- .studySuiteBar{padding:9px 10px}
- .studySuiteInner{gap:6px;padding:6px;border-radius:17px}
- .studySuiteTab{min-height:46px;padding:9px 7px;font-size:14px;border-radius:12px}
- .portal-social header .head{display:block!important;padding-top:10px!important}
- .portal-social header .head>.logo{margin-bottom:9px!important}
- .portal-social header .head>.nav{margin-left:0!important;overflow-x:auto!important;flex-wrap:nowrap!important;padding-bottom:3px!important}
+ .studySuiteBar{padding:8px 9px}
+ .studySuiteInner{gap:6px;padding:5px;border-radius:16px}
+ .studySuiteTab{min-height:45px;padding:9px 6px;font-size:13px;border-radius:11px}
+ .studySuiteTab .suiteEmoji{font-size:15px}
+ .portal-history header{padding:12px 14px!important}
+ .portal-history .topStats{gap:6px!important}
+ .portal-social header .head{display:flex!important;flex-direction:column!important;align-items:stretch!important;padding:12px 14px!important}
+ .portal-social header .head>.logo{margin-bottom:2px!important;font-size:20px!important}
+ .portal-social header .head>.nav{margin-left:0!important;width:100%!important;display:flex!important;overflow-x:auto!important;flex-wrap:nowrap!important;gap:7px!important;padding-bottom:3px!important;scrollbar-width:none}
+ .portal-social header .head>.nav::-webkit-scrollbar{display:none}
  .portal-social header .head>.nav button{flex:0 0 auto!important}
- .portal-english .top .head{display:flex!important;align-items:center!important;padding-top:9px!important}
+ .portal-english .top .head{display:flex!important;align-items:center!important;gap:9px!important;padding-top:9px!important}
  .portal-english .brand{flex:1 1 auto!important}
- .portal-english .mainnav{order:3!important;width:100%!important;margin-left:0!important;overflow-x:auto!important;flex-wrap:nowrap!important;padding-bottom:4px!important}
+ .portal-english .mainnav{order:3!important;width:100%!important;margin:0!important;overflow-x:auto!important;flex-wrap:nowrap!important;padding-bottom:4px!important;scrollbar-width:none}
+ .portal-english .mainnav::-webkit-scrollbar{display:none}
  .portal-english .mainnav button{flex:0 0 auto!important}
  .portal-english .top-right{display:none!important}
 }
-@media(max-width:520px){
- .studySuiteBar{padding:8px 7px}
+@media(max-width:390px){
+ .studySuiteBar{padding:7px 6px}
  .studySuiteInner{gap:5px;padding:5px;border-radius:15px}
- .studySuiteTab{min-height:44px;padding:8px 4px;font-size:13px;letter-spacing:-.025em}
- .studySuiteTab .suiteEmoji{font-size:15px}
+ .studySuiteTab{min-height:43px;padding:8px 3px;font-size:12px}
+ .studySuiteTab .suiteEmoji{font-size:14px}
 }
 </style></head>
-<body class="portal-social"><div class="unifiedSubjectsShell theme-social"><nav class="unifiedSubjects" aria-label="과목 전환"><a class="" href="/" target="_self"><span class="emoji">📜</span><span>한국사</span></a><a class="active social" href="/social/" target="_self" aria-current="page"><span class="emoji">🌐</span><span>통합사회</span></a><a class="" href="/english/" target="_self"><span class="emoji">🔤</span><span>공통영어</span></a></nav></div><section class="studySuiteBar"><nav aria-label="과목 전환" class="studySuiteInner"><a class="studySuiteTab" href="/" target="_self"><span class="suiteEmoji">📜</span><span>한국사</span></a><a aria-current="page" class="studySuiteTab active" href="/social/" target="_self"><span class="suiteEmoji">🌐</span><span>통합사회</span></a><a class="studySuiteTab" href="/english/" target="_self"><span class="suiteEmoji">🔤</span><span>공통영어</span></a></nav></section>
+<body class="portal-social"><section class="studySuiteBar" data-ui="v40"><nav aria-label="과목 전환" class="studySuiteInner"><a class="studySuiteTab history" data-subject="history" href="/" target="_self"><span class="suiteEmoji">📜</span><span>한국사</span></a><a aria-current="page" class="studySuiteTab social active" data-subject="social" href="/social/" target="_self"><span class="suiteEmoji">🌐</span><span>통합사회</span></a><a class="studySuiteTab english" data-subject="english" href="/english/" target="_self"><span class="suiteEmoji">🔤</span><span>공통영어</span></a></nav></section>
 <header></header>
 <main class="wrap" id="app"></main>
 <script>
@@ -282,11 +282,11 @@ function showEssayGuide(){
 function filterConcepts(v){v=v.trim().toLowerCase();document.querySelectorAll(".searchable").forEach(el=>{let own=el.matches(".term,.keyword,tr")||el.classList.contains("conceptSection");if(own)el.style.display=!v||el.textContent.toLowerCase().includes(v)?"":"none"})}
 home();
 </script>
-<script id="study-suite-nav">document.addEventListener('click',function(e){
+<script id="unified-subject-fallback">document.addEventListener("click",function(e){var a=e.target.closest?e.target.closest(".unifiedSubjects a"):null;if(!a)return;var href=a.getAttribute("href");if(!href)return;e.preventDefault();try{window.location.assign(href)}catch(_){window.location.href=href}},false);</script><script id="study-suite-nav">document.addEventListener('click',function(e){
   var a=e.target.closest?e.target.closest('.studySuiteTab'):null;
   if(!a)return;
   var href=a.getAttribute('href');
   if(!href)return;
   e.preventDefault();
   try{window.location.assign(href)}catch(_){window.location.href=href}
-},false);</script><script id="unified-subject-fallback">document.addEventListener("click",function(e){var a=e.target.closest?e.target.closest(".unifiedSubjects a"):null;if(!a)return;var href=a.getAttribute("href");if(!href)return;e.preventDefault();try{window.location.assign(href)}catch(_){window.location.href=href}},false);</script></body></html>
+},false);</script></body></html>
