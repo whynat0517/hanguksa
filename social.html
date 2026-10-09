@@ -139,8 +139,25 @@ header .head{display:flex!important;align-items:center!important;gap:14px!import
  .studySuiteTab{min-height:43px;padding:8px 3px;font-size:12px}
  .studySuiteTab .suiteEmoji{font-size:14px}
 }
+</style><style id="global-subject-style">
+/* === v39 unified subject bar === */
+.subjectPortal,.xSubjectSwitch,.kx-switch{display:none!important}
+#globalSubjectBarWrap{position:relative;z-index:9999;padding:10px 12px;background:rgba(255,255,255,.97);border-bottom:1px solid #e8e8ec;box-shadow:0 4px 18px rgba(24,28,40,.06);font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif}
+#globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border:1px solid #e4e4e8;border-radius:18px;background:#f6f6f8}
+#globalSubjectBar a{min-width:0;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 12px;border-radius:13px;border:1px solid transparent;text-decoration:none!important;color:#42444a;background:#fff;font-size:15px;font-weight:900;letter-spacing:-.03em;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation;box-shadow:0 1px 2px rgba(20,20,25,.04)}
+#globalSubjectBar a:hover{transform:translateY(-1px)}
+#globalSubjectBar a.active.history{color:#331820;background:linear-gradient(135deg,#ffd5e6,#f39ac2);border-color:#eca5c5}
+#globalSubjectBar a.active.social{color:#fff;background:linear-gradient(135deg,#3159d8,#7185f2);border-color:#3159d8}
+#globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}
+#globalSubjectBar .subjectEmoji{font-size:18px;line-height:1}
+body[data-app-subject="social"] header .head{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
+body[data-app-subject="social"] header .head>.nav{margin-left:auto!important;justify-content:flex-end!important;min-width:0!important;overflow-x:auto!important}
+body[data-app-subject="english"] .top .head{display:flex!important;align-items:center!important;gap:19px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
+body[data-app-subject="english"] .top .mainnav{margin-left:auto!important}
+@media(max-width:1000px){body[data-app-subject="social"] header .head>.nav{width:100%!important;margin-left:0!important;justify-content:flex-start!important}body[data-app-subject="english"] .top .mainnav{width:100%!important;margin-left:0!important}}
+@media(max-width:620px){#globalSubjectBarWrap{padding:8px 8px}#globalSubjectBar{gap:6px;padding:5px;border-radius:16px}#globalSubjectBar a{min-height:44px;padding:8px 5px;font-size:13px;gap:5px;border-radius:11px}#globalSubjectBar .subjectEmoji{font-size:16px}}
 </style></head>
-<body class="portal-social"><section class="studySuiteBar" data-ui="v40"><nav aria-label="과목 전환" class="studySuiteInner"><a class="studySuiteTab history" data-subject="history" href="/" target="_self"><span class="suiteEmoji">📜</span><span>한국사</span></a><a aria-current="page" class="studySuiteTab social active" data-subject="social" href="/social/" target="_self"><span class="suiteEmoji">🌐</span><span>통합사회</span></a><a class="studySuiteTab english" data-subject="english" href="/english/" target="_self"><span class="suiteEmoji">🔤</span><span>공통영어</span></a></nav></section>
+<body class="portal-social" data-app-subject="social"><div id="globalSubjectBarWrap"><nav id="globalSubjectBar" aria-label="과목 전환"><a class="history" href="/" target="_self"><span class="subjectEmoji">📜</span><span>한국사</span></a><a class="social active" href="/social/" target="_self" aria-current="page"><span class="subjectEmoji">🌐</span><span>통합사회</span></a><a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a></nav></div><section class="studySuiteBar" data-ui="v40"><nav aria-label="과목 전환" class="studySuiteInner"><a class="studySuiteTab history" data-subject="history" href="/" target="_self"><span class="suiteEmoji">📜</span><span>한국사</span></a><a aria-current="page" class="studySuiteTab social active" data-subject="social" href="/social/" target="_self"><span class="suiteEmoji">🌐</span><span>통합사회</span></a><a class="studySuiteTab english" data-subject="english" href="/english/" target="_self"><span class="suiteEmoji">🔤</span><span>공통영어</span></a></nav></section>
 <header></header>
 <main class="wrap" id="app"></main>
 <script>
@@ -289,4 +306,4 @@ home();
   if(!href)return;
   e.preventDefault();
   try{window.location.assign(href)}catch(_){window.location.href=href}
-},false);</script></body></html>
+},false);</script><script id="global-subject-fallback">document.addEventListener("click",function(e){var a=e.target.closest?e.target.closest("#globalSubjectBar a"):null;if(!a)return;var h=a.getAttribute("href");if(h){e.preventDefault();window.location.assign(h);}},false);</script></body></html>
