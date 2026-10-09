@@ -1,0 +1,142 @@
+name: Normalize integrated subject UI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/normalize-ui.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Normalize three-subject tabs and mobile layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, json
+
+          CSS = r'''
+          /* === v39 unified subject bar === */
+          .subjectPortal,.xSubjectSwitch,.kx-switch{display:none!important}
+          #globalSubjectBarWrap{position:relative;z-index:9999;padding:10px 12px;background:rgba(255,255,255,.97);border-bottom:1px solid #e8e8ec;box-shadow:0 4px 18px rgba(24,28,40,.06);font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif}
+          #globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border:1px solid #e4e4e8;border-radius:18px;background:#f6f6f8}
+          #globalSubjectBar a{min-width:0;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 12px;border-radius:13px;border:1px solid transparent;text-decoration:none!important;color:#42444a;background:#fff;font-size:15px;font-weight:900;letter-spacing:-.03em;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation;box-shadow:0 1px 2px rgba(20,20,25,.04)}
+          #globalSubjectBar a:hover{transform:translateY(-1px)}
+          #globalSubjectBar a.active.history{color:#331820;background:linear-gradient(135deg,#ffd5e6,#f39ac2);border-color:#eca5c5}
+          #globalSubjectBar a.active.social{color:#fff;background:linear-gradient(135deg,#3159d8,#7185f2);border-color:#3159d8}
+          #globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}
+          #globalSubjectBar .subjectEmoji{font-size:18px;line-height:1}
+          body[data-app-subject="social"] header .head{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
+          body[data-app-subject="social"] header .head>.nav{margin-left:auto!important;justify-content:flex-end!important;min-width:0!important;overflow-x:auto!important}
+          body[data-app-subject="english"] .top .head{display:flex!important;align-items:center!important;gap:19px!important;flex-wrap:wrap!important;grid-template-columns:none!important}
+          body[data-app-subject="english"] .top .mainnav{margin-left:auto!important}
+          @media(max-width:1000px){body[data-app-subject="social"] header .head>.nav{width:100%!important;margin-left:0!important;justify-content:flex-start!important}body[data-app-subject="english"] .top .mainnav{width:100%!important;margin-left:0!important}}
+          @media(max-width:620px){#globalSubjectBarWrap{padding:8px 8px}#globalSubjectBar{gap:6px;padding:5px;border-radius:16px}#globalSubjectBar a{min-height:44px;padding:8px 5px;font-size:13px;gap:5px;border-radius:11px}#globalSubjectBar .subjectEmoji{font-size:16px}}
+          '''
+
+          def bar(active):
+              items=[('history','📜','한국사','/'),('social','🌐','통합사회','/social/'),('english','🔤','공통영어','/english/')]
+              parts=[]
+              for key,emoji,label,href in items:
+                  active_bits=' active' if key==active else ''
+                  aria=' aria-current="page"' if key==active else ''
+                  parts.append(f'<a class="{key}{active_bits}" href="{href}" target="_self"{aria}><span class="subjectEmoji">{emoji}</span><span>{label}</span></a>')
+              return '<div id="globalSubjectBarWrap"><nav id="globalSubjectBar" aria-label="과목 전환">'+''.join(parts)+'</nav></div>'
+
+          def patch(path, active):
+              p=Path(path)
+              if not p.exists():
+                  raise SystemExit(f'missing: {path}')
+              s=p.read_text(encoding='utf-8')
+              # remove all previous subject switchers / injected styles / click fallbacks
+              s=re.sub(r'<div[^>]*id=["\']globalSubjectBarWrap["\'][^>]*>.*?</div>','',s,flags=re.I|re.S)
+              s=re.sub(r'<(?:nav|div)[^>]*class=["\'][^"\']*(?:subjectPortal|xSubjectSwitch|kx-switch)[^"\']*["\'][^>]*>.*?</(?:nav|div)>','',s,flags=re.I|re.S)
+              s=re.sub(r'<style[^>]*id=["\']global-subject-style["\'][^>]*>.*?</style>','',s,flags=re.I|re.S)
+              s=re.sub(r'<script[^>]*id=["\'](?:subject-nav-fallback|global-subject-fallback)["\'][^>]*>.*?</script>','',s,flags=re.I|re.S)
+              # body marker
+              s=re.sub(r'<body\b([^>]*)>', lambda m:'<body'+re.sub(r'\sdata-app-subject=["\'][^"\']*["\']','',m.group(1))+f' data-app-subject="{active}">', s, count=1, flags=re.I)
+              # style + bar + fallback
+              s=s.replace('</head>',f'<style id="global-subject-style">{CSS}</style></head>',1)
+              s=re.sub(r'(<body\b[^>]*>)',r'\1'+bar(active),s,count=1,flags=re.I)
+              fallback='<script id="global-subject-fallback">document.addEventListener("click",function(e){var a=e.target.closest?e.target.closest("#globalSubjectBar a"):null;if(!a)return;var h=a.getAttribute("href");if(h){e.preventDefault();window.location.assign(h);}},false);</script>'
+              s=s.replace('</body>',fallback+'</body>',1)
+              p.write_text(s,encoding='utf-8')
+
+          patch('index.html','history')
+          patch('social.html','social')
+          patch('social/index.html','social')
+          patch('english.html','english')
+          patch('english/index.html','english')
+
+          # route and data integrity
+          v=json.loads(Path('vercel.json').read_text(encoding='utf-8'))
+          routes={x.get('source'):x.get('destination') for x in v.get('rewrites',[])}
+          assert routes.get('/social')=='/social/index.html'
+          assert routes.get('/english')=='/english/index.html'
+
+          h=Path('index.html').read_text(encoding='utf-8')
+          assert h.count('id="globalSubjectBar"')==1
+          assert h.count('data:image/')>=157
+          for i in range(1,61):
+              assert f'user_{i:02d}.png' in h
+
+          for fp in ['social/index.html','english/index.html']:
+              t=Path(fp).read_text(encoding='utf-8')
+              assert t.count('id="globalSubjectBar"')==1
+              assert all(x in t for x in ['href="/"','href="/social/"','href="/english/"'])
+
+          e=Path('english/index.html').read_text(encoding='utf-8')
+          m=re.search(r'<script id="dataset" type="application/json">(.*?)</script>',e,re.S)
+          assert m
+          d=json.loads(m.group(1))
+          assert len(d['entries'])==37 and len(d['questions'])==1850
+          counts={}
+          for q in d['questions']:
+              counts[q['pid']]=counts.get(q['pid'],0)+1
+          assert all(counts.get(x['id'])==50 for x in d['entries'])
+          assert all(x.get('text','').strip() for x in d['entries'])
+          assert not any('�' in x.get('text','') for x in d['entries'])
+          print('UI + route + image + English dataset audits passed')
+          PY
+
+      - name: Check JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          for fp in ['index.html','social/index.html','english/index.html']:
+              text=Path(fp).read_text(encoding='utf-8')
+              blocks=[]
+              for attrs,body in re.findall(r'<script([^>]*)>(.*?)</script>',text,re.S|re.I):
+                  if 'application/json' in attrs or 'src=' in attrs:
+                      continue
+                  if body.strip():
+                      blocks.append(body)
+              for i,body in enumerate(blocks):
+                  with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as f:
+                      f.write(body); name=f.name
+                  r=subprocess.run(['node','--check',name],capture_output=True,text=True)
+                  if r.returncode:
+                      raise SystemExit(f'{fp} script {i}: {r.stderr}')
+          print('All JavaScript syntax checks passed')
+          PY
+
+      - name: Commit normalized UI
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html social.html social/index.html english.html english/index.html vercel.json
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "Unify subject tabs and mobile UI across all three apps"
+          git push
