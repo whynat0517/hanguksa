@@ -16,7 +16,11 @@
     },
     {
       "source": "/social",
-      "destination": "/social/index.html"
+      "destination": "/social-runtime.html"
+    },
+    {
+      "source": "/social/",
+      "destination": "/social-runtime.html"
     },
     {
       "source": "/english",
