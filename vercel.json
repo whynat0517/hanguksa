@@ -12,11 +12,15 @@
     },
     {
       "source": "/social",
-      "destination": "/social/index.html"
+      "destination": "/social-runtime.html"
     },
     {
       "source": "/english",
       "destination": "/english/index.html"
+    },
+    {
+      "source": "/korean",
+      "destination": "/korean/index.html"
     }
   ],
   "headers": [
