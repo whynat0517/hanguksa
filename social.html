@@ -82,7 +82,18 @@ body{background:linear-gradient(180deg,#f6f8fc 0,#eef2f8 100%);min-height:100vh}
 .subjectPortal{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:6px;border-radius:14px;width:max-content;max-width:100%}
 .subjectPortal a{-webkit-tap-highlight-color:transparent;touch-action:manipulation;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border-radius:10px;text-decoration:none;font-size:13px;font-weight:900;white-space:nowrap}
 @media(max-width:680px){.subjectPortal{width:100%;flex-wrap:nowrap}.subjectPortal a{flex:1 0 auto}}
-.subjectPortal{background:#f8f9fc;border:1px solid #dce2ec}.subjectPortal a{color:#475467;background:#fff;border:1px solid #dce2ec}.subjectPortal a.active{color:#fff;background:linear-gradient(135deg,#3159d8,#7185f2);border-color:#3159d8}header .head{display:grid!important;grid-template-columns:auto auto 1fr!important;gap:10px!important;align-items:center!important}header .head>.nav{justify-content:flex-end}@media(max-width:980px){header .head{grid-template-columns:1fr!important}.subjectPortal{order:-1}.nav{justify-content:flex-start!important}}</style>
+.subjectPortal{background:#f8f9fc;border:1px solid #dce2ec}.subjectPortal a{color:#475467;background:#fff;border:1px solid #dce2ec}.subjectPortal a.active{color:#fff;background:linear-gradient(135deg,#3159d8,#7185f2);border-color:#3159d8}header .head{display:grid!important;grid-template-columns:auto auto 1fr!important;gap:10px!important;align-items:center!important}header .head>.nav{justify-content:flex-end}@media(max-width:980px){header .head{grid-template-columns:1fr!important}.subjectPortal{order:-1}.nav{justify-content:flex-start!important}}
+/* ===== unified 3-subject navigation v39 ===== */
+.unifiedSubjectsShell{position:sticky;top:0;z-index:9999;padding:10px 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.unifiedSubjects{max-width:1350px;margin:0 auto;padding:6px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-radius:18px}
+.unifiedSubjects a{min-width:0;min-height:46px;padding:10px 12px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none!important;font-weight:900;font-size:14px;line-height:1.1;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .12s ease,filter .12s ease}
+.unifiedSubjects a:active{transform:scale(.985)}.unifiedSubjects .emoji{font-size:17px;line-height:1}
+.unifiedSubjectsShell.theme-history{background:rgba(10,7,12,.96)}.unifiedSubjectsShell.theme-history .unifiedSubjects{background:#171119;border:1px solid #352a37}.unifiedSubjectsShell.theme-history a{background:#211922;color:#e4d8e0;border:1px solid #433345}
+.unifiedSubjectsShell.theme-social{background:rgba(247,249,255,.96)}.unifiedSubjectsShell.theme-social .unifiedSubjects{background:#f8faff;border:1px solid #dce3f2}.unifiedSubjectsShell.theme-social a{background:#fff;color:#354052;border:1px solid #d9e0ed}
+.unifiedSubjectsShell.theme-english{background:rgba(255,251,242,.96)}.unifiedSubjectsShell.theme-english .unifiedSubjects{background:#fff7e6;border:1px solid #ecd4a8}.unifiedSubjectsShell.theme-english a{background:#fffdf8;color:#674825;border:1px solid #ead7b6}
+.unifiedSubjects a.active.history{background:linear-gradient(180deg,#ffd4e6,#f3a1c5);color:#291923;border-color:#f2a7c7}.unifiedSubjects a.active.social{background:linear-gradient(135deg,#3159d8,#7185f2);color:#fff;border-color:#3159d8}.unifiedSubjects a.active.english{background:linear-gradient(135deg,#ffdd70,#ffb13b);color:#4c2d0c;border-color:#efa63a}
+@media(max-width:680px){.unifiedSubjectsShell{padding:8px 10px}.unifiedSubjects{gap:6px;padding:5px;border-radius:16px}.unifiedSubjects a{min-height:44px;padding:9px 7px;font-size:12px;border-radius:11px}.unifiedSubjects .emoji{font-size:15px}}
+header .head{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important}header .head>.nav{display:flex!important;justify-content:flex-start!important;flex:1 1 auto!important}@media(max-width:900px){header .head{display:flex!important}.nav{width:100%!important;overflow-x:auto!important}}</style>
 <style id="study-suite-ui">/* ===== Study Suite global subject navigation v39 ===== */
 .studySuiteBar{position:relative;z-index:1200;padding:12px max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));border-bottom:1px solid transparent}
 .studySuiteInner{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:7px;border-radius:20px}
@@ -129,7 +140,7 @@ body{background:linear-gradient(180deg,#f6f8fc 0,#eef2f8 100%);min-height:100vh}
  .studySuiteTab .suiteEmoji{font-size:15px}
 }
 </style></head>
-<body class="portal-social"><section class="studySuiteBar"><nav aria-label="과목 전환" class="studySuiteInner"><a class="studySuiteTab" href="/" target="_self"><span class="suiteEmoji">📜</span><span>한국사</span></a><a aria-current="page" class="studySuiteTab active" href="/social/" target="_self"><span class="suiteEmoji">🌐</span><span>통합사회</span></a><a class="studySuiteTab" href="/english/" target="_self"><span class="suiteEmoji">🔤</span><span>공통영어</span></a></nav></section>
+<body class="portal-social"><div class="unifiedSubjectsShell theme-social"><nav class="unifiedSubjects" aria-label="과목 전환"><a class="" href="/" target="_self"><span class="emoji">📜</span><span>한국사</span></a><a class="active social" href="/social/" target="_self" aria-current="page"><span class="emoji">🌐</span><span>통합사회</span></a><a class="" href="/english/" target="_self"><span class="emoji">🔤</span><span>공통영어</span></a></nav></div><section class="studySuiteBar"><nav aria-label="과목 전환" class="studySuiteInner"><a class="studySuiteTab" href="/" target="_self"><span class="suiteEmoji">📜</span><span>한국사</span></a><a aria-current="page" class="studySuiteTab active" href="/social/" target="_self"><span class="suiteEmoji">🌐</span><span>통합사회</span></a><a class="studySuiteTab" href="/english/" target="_self"><span class="suiteEmoji">🔤</span><span>공통영어</span></a></nav></section>
 <header></header>
 <main class="wrap" id="app"></main>
 <script>
@@ -278,4 +289,4 @@ home();
   if(!href)return;
   e.preventDefault();
   try{window.location.assign(href)}catch(_){window.location.href=href}
-},false);</script></body></html>
+},false);</script><script id="unified-subject-fallback">document.addEventListener("click",function(e){var a=e.target.closest?e.target.closest(".unifiedSubjects a"):null;if(!a)return;var href=a.getAttribute("href");if(!href)return;e.preventDefault();try{window.location.assign(href)}catch(_){window.location.href=href}},false);</script></body></html>
