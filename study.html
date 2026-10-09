@@ -77,7 +77,13 @@ body{display:grid;grid-template-rows:auto minmax(0,1fr)}
   for(var i=0;i<buttons.length;i++){
     buttons[i].addEventListener('click',function(){activate(this.getAttribute('data-subject'),true);});
   }
-  frame.addEventListener('load',function(){cover.hidden=true;});
+  frame.addEventListener('load',function(){
+    cover.hidden=true;
+    try{
+      var innerBar=frame.contentDocument&&frame.contentDocument.getElementById('globalSubjectBarWrap');
+      if(innerBar)innerBar.style.display='none';
+    }catch(_e){}
+  });
   window.addEventListener('hashchange',function(){activate(subjectFromHash(),false);});
   activate(subjectFromHash(),true);
 })();
