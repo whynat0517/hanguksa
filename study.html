@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>통합 시험 대비</title>
+<style>
+:root{--bg:#0c0b10;--panel:#15131b;--panel2:#1c1923;--line:#312c3a;--text:#f7f2f7;--muted:#aaa1af;--accent:#a78bfa;--safe-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;overflow:hidden}
+body{display:grid;grid-template-rows:auto minmax(0,1fr)}
+#subjectShell{padding-top:var(--safe-top);background:linear-gradient(180deg,#17141e,#111016);border-bottom:1px solid var(--line);box-shadow:0 8px 30px #0005;z-index:20}
+.shellTop{min-height:54px;padding:8px clamp(10px,2vw,22px);display:flex;align-items:center;gap:12px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:9px;min-width:0}.brandMark{width:31px;height:31px;display:grid;place-items:center;border-radius:10px;background:#231f2e;border:1px solid #3a3348;font-weight:900}.brandText{font-weight:900;letter-spacing:-.04em;white-space:nowrap}.status{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subjectNav{display:flex;gap:7px;padding:0 clamp(10px,2vw,22px) 9px;overflow-x:auto;scrollbar-width:none}.subjectNav::-webkit-scrollbar{display:none}.subjectBtn{appearance:none;-webkit-appearance:none;border:1px solid #3b3545;background:#1b1821;color:#d9d2dc;border-radius:11px;padding:9px 15px;font:inherit;font-weight:800;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}.subjectBtn:hover{background:#25212d}.subjectBtn:active{transform:translateY(1px)}.subjectBtn.active{background:#6d55d9;border-color:#8e78ee;color:white}.subjectBtn:focus-visible{outline:3px solid #b7a7ff;outline-offset:2px}
+.frameWrap{position:relative;min-height:0;background:#0c0b10}.subjectFrame{display:block;width:100%;height:100%;border:0;background:white}.loadCover{position:absolute;inset:0;display:grid;place-items:center;background:#0f0d13;color:#d8d0dc;text-align:center;padding:24px;z-index:2}.loadCover[hidden]{display:none}.loadCover b{display:block;font-size:18px;margin-bottom:7px}.loadCover span{font-size:13px;color:#a69cab}
+.openDirect{color:#d7ccff;text-decoration:none;font-size:12px;border:1px solid #3b3545;border-radius:9px;padding:7px 10px;white-space:nowrap}.openDirect:hover{background:#25212d}
+@media(max-width:660px){.shellTop{min-height:48px}.brandText{font-size:14px}.status{display:none}.subjectBtn{padding:8px 13px;font-size:13px}.openDirect{font-size:11px;padding:6px 8px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header id="subjectShell">
+  <div class="shellTop">
+    <div class="brand"><span class="brandMark" aria-hidden="true">✦</span><span class="brandText">통합 시험 대비</span><span class="status" id="status">과목을 선택하세요</span></div>
+    <a id="openDirect" class="openDirect" href="/history" target="_blank" rel="noopener noreferrer">새 창에서 열기 ↗</a>
+  </div>
+  <nav class="subjectNav" aria-label="과목 선택">
+    <button class="subjectBtn" type="button" data-subject="history">한국사</button>
+    <button class="subjectBtn" type="button" data-subject="social">통합사회</button>
+    <button class="subjectBtn" type="button" data-subject="english">공통영어</button>
+    <button class="subjectBtn" type="button" data-subject="korean">국어</button>
+  </nav>
+</header>
+<main class="frameWrap">
+  <div class="loadCover" id="loadCover"><div><b>과목 불러오는 중…</b><span>각 과목은 독립 실행되어 서로의 CSS·JavaScript와 충돌하지 않습니다.</span></div></div>
+  <iframe class="subjectFrame" id="subjectFrame" title="학습 프로그램"></iframe>
+</main>
+<script>
+(function(){
+  'use strict';
+  var subjects={
+    history:{label:'한국사',path:'/history'},
+    social:{label:'통합사회',path:'/social'},
+    english:{label:'공통영어',path:'/english'},
+    korean:{label:'국어',path:'/korean'}
+  };
+  var frame=document.getElementById('subjectFrame');
+  var cover=document.getElementById('loadCover');
+  var status=document.getElementById('status');
+  var direct=document.getElementById('openDirect');
+  var buttons=document.querySelectorAll('[data-subject]');
+  var current='';
+
+  function subjectFromHash(){
+    var key=(location.hash||'').replace(/^#/,'').toLowerCase();
+    return Object.prototype.hasOwnProperty.call(subjects,key)?key:'history';
+  }
+  function activate(key,writeHash){
+    if(!Object.prototype.hasOwnProperty.call(subjects,key))key='history';
+    var data=subjects[key];
+    for(var i=0;i<buttons.length;i++){
+      var active=buttons[i].getAttribute('data-subject')===key;
+      buttons[i].classList.toggle('active',active);
+      buttons[i].setAttribute('aria-current',active?'page':'false');
+    }
+    status.textContent=data.label+' 학습 프로그램';
+    direct.href=data.path;
+    if(current!==key){
+      current=key;
+      cover.hidden=false;
+      frame.title=data.label+' 학습 프로그램';
+      frame.src=data.path;
+    }
+    if(writeHash&&location.hash!=='#'+key){
+      if(history&&history.replaceState){history.replaceState(null,'','#'+key);}else{location.hash=key;}
+    }
+  }
+  for(var i=0;i<buttons.length;i++){
+    buttons[i].addEventListener('click',function(){activate(this.getAttribute('data-subject'),true);});
+  }
+  frame.addEventListener('load',function(){cover.hidden=true;});
+  window.addEventListener('hashchange',function(){activate(subjectFromHash(),false);});
+  activate(subjectFromHash(),true);
+})();
+</script>
+</body>
+</html>
