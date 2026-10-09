@@ -83,7 +83,7 @@ jobs:
           assert routes.get('/english')=='/english/index.html'
 
           h=Path('index.html').read_text(encoding='utf-8')
-          assert h.count('id="globalSubjectBar"')==1\n          assert 'studySuiteBar' not in re.sub(r'<style.*?</style>','',h,flags=re.S|re.I)
+          assert h.count('id="globalSubjectBar"')==1\n          body_only=re.sub(r'<style.*?</style>','',h,flags=re.S|re.I)\n          assert 'studySuiteBar' not in body_only
           assert h.count('data:image/')>=157
           for i in range(1,61):
               assert f'user_{i:02d}.png' in h
