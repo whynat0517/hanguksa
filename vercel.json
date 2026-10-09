@@ -3,11 +3,11 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/",
+      "source": "/study",
       "destination": "/study.html"
     },
     {
-      "source": "/study",
+      "source": "/study/",
       "destination": "/study.html"
     },
     {
@@ -48,6 +48,13 @@
           "value": "strict-origin-when-cross-origin"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/study",
+      "permanent": false
     }
   ]
 }
