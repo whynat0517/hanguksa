@@ -3,8 +3,12 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/history-runtime.html"
+    },
+    {
       "source": "/history",
-      "destination": "/index.html"
+      "destination": "/history-runtime.html"
     },
     {
       "source": "/social",
