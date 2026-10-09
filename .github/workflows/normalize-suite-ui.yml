@@ -1,0 +1,66 @@
+name: Normalize three-subject UI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/scripts/normalize_suite_ui.py"
+      - ".github/workflows/normalize-suite-ui.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install HTML parser
+        run: python -m pip install --disable-pip-version-check beautifulsoup4
+
+      - name: Normalize subject tabs and verify datasets
+        run: python .github/scripts/normalize_suite_ui.py
+
+      - name: Check JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          import subprocess, tempfile
+          files=[
+              Path("index.html"),
+              Path("social/index.html"),
+              Path("english/index.html"),
+          ]
+          for path in files:
+              soup=BeautifulSoup(path.read_text(encoding="utf-8"),"html.parser")
+              for i,sc in enumerate(soup.find_all("script")):
+                  if sc.get("src") or sc.get("type")=="application/json":
+                      continue
+                  code=sc.string or sc.get_text()
+                  if not code.strip():
+                      continue
+                  with tempfile.NamedTemporaryFile("w",suffix=".js",encoding="utf-8",delete=False) as f:
+                      f.write(code)
+                      name=f.name
+                  p=subprocess.run(["node","--check",name],capture_output=True,text=True)
+                  Path(name).unlink(missing_ok=True)
+                  if p.returncode:
+                      raise SystemExit(f"{path} script {i} failed: {p.stderr}")
+              print(f"{path}: JavaScript OK")
+          PY
+
+      - name: Commit normalized site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html social.html social/index.html english.html english/index.html
+          if git diff --cached --quiet; then
+            echo "No UI changes"
+            exit 0
+          fi
+          git commit -m "Fix and unify three-subject navigation UI"
+          git push
