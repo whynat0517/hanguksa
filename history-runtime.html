@@ -16,14 +16,14 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
 (async()=>{
   const fail=(msg)=>{document.getElementById('loading').innerHTML='<div><b>불러오기 실패</b><p>'+msg+'</p></div>'};
   try{
-    let html=await fetch('/index.html?v=20261010-history-navfix1',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('원본 파일을 불러오지 못했습니다.');return r.text()});
+    let html=await fetch('/index.html?v=20261010-history-quizfix1',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('원본 파일을 불러오지 못했습니다.');return r.text()});
     html=html.replace('#globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));','#globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));');
     html=html.replace('#globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}','#globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}\n#globalSubjectBar a.active.korean{color:#fff;background:linear-gradient(135deg,#8d4036,#b96f5f);border-color:#8d4036}');
     html=html.replace('<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a></nav>','<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a><a class="korean" href="/korean/" target="_self"><span class="subjectEmoji">📖</span><span>국어</span></a></nav>');
     html=html.replace('v40 · 3과목 통합 UI','v41 · 4과목 통합 UI');
 
-    // 탭 전환 호환성 강화: 조건부 classList.toggle에 의존하지 않고 각 뷰를 직접 표시/숨김.
-    // Samsung Internet / 일부 WebView에서 활성 탭만 바뀌고 내용은 이전 화면에 남는 현상을 방지한다.
+    // 모든 화면 전환은 hidden 클래스만 사용한다.
+    // inline display:none을 남기면 startMode()/finish()가 class만 해제할 때 문제·결과 화면이 보이지 않으므로 사용하지 않는다.
     const oldShowView=[
       "function showView(view){",
       " clearInterval(timerId);",
@@ -43,9 +43,8 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
       " views.forEach(id=>{",
       "   const el=$(id);",
       "   if(!el)return;",
-      "   const active=id===view;",
-      "   if(active){el.classList.remove('hidden');el.style.removeProperty('display');}",
-      "   else{el.classList.add('hidden');el.style.display='none';}",
+      "   el.style.removeProperty('display');",
+      "   el.classList.toggle('hidden',id!==view);",
       " });",
       " document.querySelectorAll('.studyTab').forEach(b=>{",
       "   if(b.dataset.view===view)b.classList.add('active');",
@@ -55,7 +54,7 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
       " if(view==='photoGallery')buildPhotoGallery();",
       " if(view==='sourceGallery')buildSourceGallery();",
       " const active=$(view);",
-      " if(active){active.classList.remove('hidden');active.style.removeProperty('display');}",
+      " if(active)active.classList.remove('hidden');",
       " window.scrollTo(0,0);",
       "}"
     ].join("\n");
