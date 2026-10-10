@@ -12,10 +12,20 @@
 (async()=>{
  const fail=(m)=>{document.getElementById('loading').innerHTML='<div><b>불러오기 실패</b><p>'+m+'</p></div>'};
  try{
-  let html=await fetch('/social/index.html?v=20261010-navfix1',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('사회 원본을 불러오지 못했습니다.');return r.text()});
+  let html=await fetch('/social/index.html?v=20261010-quizfix2',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('사회 원본을 불러오지 못했습니다.');return r.text()});
   html=html.replace('#globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));','#globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));');
   html=html.replace('#globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}','#globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}\n#globalSubjectBar a.active.korean{color:#fff;background:linear-gradient(135deg,#8d4036,#b96f5f);border-color:#8d4036}');
   html=html.replace('<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a></nav>','<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a><a class="korean" href="/korean/" target="_self"><span class="subjectEmoji">📖</span><span>국어</span></a></nav>');
+  // 문제 화면은 #app을 명시적으로 참조한다. 브라우저가 id="app"을 window.app으로 자동 노출한다고 가정하지 않는다.
+  const appNeedle="const $=s=>document.querySelector(s);\\nfunction esc(s){";
+  const appReplacement="const $=s=>document.querySelector(s);\\nconst app=document.getElementById(\"app\");\\nif(!app)throw new Error(\"통합사회 문제 화면 영역을 찾지 못했습니다.\");\\nfunction esc(s){";
+  if(!html.includes(appNeedle))throw new Error('통합사회 문제 화면 초기화 코드를 찾지 못했습니다.');
+  html=html.replace(appNeedle,appReplacement);
+
+  // 시험 시작/문항 렌더 함수가 원본에 실제로 있는지도 배포 전에 확인한다.
+  if(!html.includes('function start(){')||!html.includes('function render(){')){
+    throw new Error('통합사회 문제 출제 함수를 찾지 못했습니다.');
+  }
   document.open();document.write(html);document.close();
  }catch(e){fail(e.message||String(e))}
 })();
