@@ -16,7 +16,7 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
 (async()=>{
   const fail=(msg)=>{document.getElementById('loading').innerHTML='<div><b>불러오기 실패</b><p>'+msg+'</p></div>'};
   try{
-    let html=await fetch('/index.html?v=20261010-quizfix2',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('원본 파일을 불러오지 못했습니다.');return r.text()});
+    let html=await fetch('/index.html?v=20261010-quizfix3',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('원본 파일을 불러오지 못했습니다.');return r.text()});
     html=html.replace('#globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));','#globalSubjectBar{width:min(1180px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));');
     html=html.replace('#globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}','#globalSubjectBar a.active.english{color:#472c0c;background:linear-gradient(135deg,#ffe07a,#ffae39);border-color:#eda23b}\n#globalSubjectBar a.active.korean{color:#fff;background:linear-gradient(135deg,#8d4036,#b96f5f);border-color:#8d4036}');
     html=html.replace('<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a></nav>','<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a><a class="korean" href="/korean/" target="_self"><span class="subjectEmoji">📖</span><span>국어</span></a></nav>');
@@ -115,6 +115,11 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
     ].join("\n");
     if(!html.includes(oldSelect))throw new Error('프린트 문제 필터를 적용할 위치를 찾지 못했습니다.');
     html=html.replace(oldSelect,newSelect);
+
+    const oldStartQuiz=" $('quiz').classList.remove('hidden');";
+    const newStartQuiz=" $('quiz').classList.remove('hidden');$('quiz').style.removeProperty('display');";
+    if(!html.includes(oldStartQuiz))throw new Error('한국사 문제 화면 표시 코드를 찾지 못했습니다.');
+    html=html.replace(oldStartQuiz,newStartQuiz);
 
     const oldQ=" $('qtext').textContent=q.q;$('feedback').className='feedback hidden';";
     const newQ=" $('qtext').textContent=mode==='worksheet'?worksheetDisplay(q):q.q;$('feedback').className='feedback hidden';";
