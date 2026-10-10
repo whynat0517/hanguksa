@@ -22,6 +22,46 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
     html=html.replace('<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a></nav>','<a class="english" href="/english/" target="_self"><span class="subjectEmoji">🔤</span><span>공통영어</span></a><a class="korean" href="/korean/" target="_self"><span class="subjectEmoji">📖</span><span>국어</span></a></nav>');
     html=html.replace('v40 · 3과목 통합 UI','v41 · 4과목 통합 UI');
 
+    // 탭 전환 호환성 강화: 조건부 classList.toggle에 의존하지 않고 각 뷰를 직접 표시/숨김.
+    // Samsung Internet / 일부 WebView에서 활성 탭만 바뀌고 내용은 이전 화면에 남는 현상을 방지한다.
+    const oldShowView=[
+      "function showView(view){",
+      " clearInterval(timerId);",
+      " ['home','timelineView','summaryView','mapGallery','sourceGallery','photoGallery','quiz','result'].forEach(id=>$(id)?.classList.toggle('hidden',id!==view));",
+      " document.querySelectorAll('.studyTab').forEach(b=>b.classList.toggle('active',b.dataset.view===view));",
+      " if(view==='mapGallery')buildMapGallery();",
+      " if(view==='photoGallery')buildPhotoGallery();",
+      " if(view==='sourceGallery')buildSourceGallery();",
+      " window.scrollTo({top:0,behavior:'smooth'});",
+      "}"
+    ].join("\n");
+    const newShowView=[
+      "function showView(view){",
+      " clearInterval(timerId);",
+      " const views=['home','timelineView','summaryView','mapGallery','sourceGallery','photoGallery','quiz','result'];",
+      " if(!views.includes(view))view='home';",
+      " views.forEach(id=>{",
+      "   const el=$(id);",
+      "   if(!el)return;",
+      "   const active=id===view;",
+      "   if(active){el.classList.remove('hidden');el.style.removeProperty('display');}",
+      "   else{el.classList.add('hidden');el.style.display='none';}",
+      " });",
+      " document.querySelectorAll('.studyTab').forEach(b=>{",
+      "   if(b.dataset.view===view)b.classList.add('active');",
+      "   else b.classList.remove('active');",
+      " });",
+      " if(view==='mapGallery')buildMapGallery();",
+      " if(view==='photoGallery')buildPhotoGallery();",
+      " if(view==='sourceGallery')buildSourceGallery();",
+      " const active=$(view);",
+      " if(active){active.classList.remove('hidden');active.style.removeProperty('display');}",
+      " window.scrollTo(0,0);",
+      "}"
+    ].join("\n");
+    if(!html.includes(oldShowView))throw new Error('한국사 탭 전환 코드를 찾지 못했습니다.');
+    html=html.replace(oldShowView,newShowView);
+
     // Samsung Internet / 일부 WebView 호환: classList.toggle(token, force) 대신 명시적 add/remove 사용.
     // force 인자를 무시하는 환경에서 모든 학습 섹션이 동시에 뒤집혀 사진자료 화면이 먼저 보이는 문제를 막는다.
     const oldShowView=[
