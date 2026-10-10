@@ -61,7 +61,7 @@ body{display:grid;grid-template-rows:auto minmax(0,1fr)}
     var data=subjects[key];
     for(var i=0;i<buttons.length;i++){
       var active=buttons[i].getAttribute('data-subject')===key;
-      buttons[i].classList.toggle('active',active);
+      if(active)buttons[i].classList.add('active');else buttons[i].classList.remove('active');
       buttons[i].setAttribute('aria-current',active?'page':'false');
     }
     status.textContent=data.label+' 학습 프로그램';
@@ -69,7 +69,7 @@ body{display:grid;grid-template-rows:auto minmax(0,1fr)}
     current=key;
     cover.hidden=false;
     frame.title=data.label+' 학습 프로그램';
-    frame.src=data.path+'?portal=1&v=20261010-2';
+    frame.src=data.path+'?portal=1&v=20261010-3';
     if(writeHash&&location.hash!=='#'+key){
       if(history&&history.replaceState){history.replaceState(null,'','#'+key);}else{location.hash=key;}
     }
