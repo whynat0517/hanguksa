@@ -11,6 +11,7 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
 </style>
 </head>
 <body>
+<div style="padding:12px;text-align:right"><a href="/history-final.html" style="color:#f5c88d;font-weight:800">기말고사 전환 →</a></div>
 <div id="loading"><div><b>한국사 문제 검증 중…</b><p>프린트 문제의 잘린 문장·단서 부족·선택지 문맥을 검사하고, 풀 수 있는 형태로 보강하고 있어요.</p></div></div>
 <script>
 (async()=>{
@@ -129,6 +130,12 @@ html,body{margin:0;min-height:100%;background:#0f0b11;color:#f7edf3;font-family:
     // 생성된 원본 스크립트에 런타임 패치용 잘못된 \\n 토큰이 남지 않았는지 최종 확인.
     if(html.includes('};\\nfunction worksheetAnswer')||html.includes(';\\nfunction worksheetRawBody')){
       throw new Error('한국사 런타임 스크립트 줄바꿈 변환 오류를 감지했습니다.');
+    }
+    // 중간고사 학습기 자체에서도 기말고사 페이지로 바로 이동할 수 있도록 고정 전환 링크를 추가.
+    // 사용자가 교과목 통합 페이지에서 접속한 경우에는 부모 페이지의 전환 탭이 이미 존재한다.
+    const periodLink='<a href="/history-final.html" aria-label="한국사 기말고사 전환" style="position:fixed;bottom:16px;right:16px;z-index:99999;display:inline-flex;align-items:center;gap:7px;background:#794655;color:white;padding:11px 17px;border-radius:999px;border:2px solid #ffd6ab;box-shadow:0 8px 26px #0005;font:800 14px system-ui,sans-serif;text-decoration:none">📅 한국사 기말고사 →</a>';
+    if(!new URLSearchParams(location.search).has('portal')&&html.includes('</body>')){
+      html=html.replace('</body>',periodLink+'</body>');
     }
     document.open();
     document.write(html);
