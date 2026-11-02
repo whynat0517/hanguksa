@@ -17,8 +17,18 @@ G.forEach(g=>{
 });
 function kr(n){return Number(n.toFixed(2)).toLocaleString("ko-KR")+"만 원";}
 function numeric(id,unit,difficulty,type,stem,right,errors,detail){
- const options=[right,...errors],why={};
- if(new Set(options).size!==5)throw Error("Duplicate numeric options: "+id);
+ const options=[right],why={};
+ for(const value of errors){if(!options.includes(value))options.push(value);}
+ const valueNumber=Number(String(right).replace(/[^\d.-]/g,""));
+ const suffix=String(right).includes("만 원")?"만 원":String(right).includes("원")?"원":"";
+ let step=1;
+ while(options.length<5&&step<30){
+  const v=Math.max(0,valueNumber+(step%2===0?-1:1)*Math.ceil(step/2)*(suffix==="원"?Math.max(100,Math.round(valueNumber*.005)):1));
+  const replacement=Number(v.toFixed(2)).toLocaleString("ko-KR")+suffix;
+  if(!options.includes(replacement))options.push(replacement);
+  step++;
+ }
+ if(options.length!==5)throw Error("Unable to build numeric options: "+id);
  options.forEach(x=>why[x]=(x===right?"정답. ":"오답. 주어진 비용·편익·공식을 적용하면 이 값이 나오지 않습니다. ")+detail);
  add({id,unit,difficulty,type,stem,correct:right,options:mix(options),why,explain:detail});
 }
